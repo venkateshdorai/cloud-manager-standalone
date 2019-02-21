@@ -1,0 +1,36 @@
+<h1>Create Resource Group</h1>
+
+<form novalidate [formGroup]="groupForm" (ngSubmit)="createGroup($event)">
+    <div class="row" style="margin-top: 20px">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header">Group Information</div>
+                <div class="card-body">
+                    <fieldset class="form-group">
+                        <label>Group name</label><br />
+                        <input formControlName="groupName" type="text" value="" size="40" placeholder="Name">
+                        <p class="help-block">The name for the new resource group (free text).</p>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Group type</label><br />
+                        <select formControlName="groupType" size="1">
+                            <option value="selenium">Selenium</option>
+                        </select>
+                        <p class="help-block">The type of resources the resource group manages.</p>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-plus"> </i> Create</button>
+            <p style="margin-top: 10px"></p>
+            <p *ngFor="let alert of alerts">
+                <ngb-alert [type]="alert.type" [dismissible]="true" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+            </p>
+        </div>
+    </div>
+
+</form>

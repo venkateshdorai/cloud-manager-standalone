@@ -1,0 +1,84 @@
+<h1>ACM Configuration</h1>
+<form novalidate [formGroup]="configForm" (ngSubmit)="saveConfig($event)">
+<div class="row" style="margin-top: 20px">
+    <div class="col-sm-12">
+        <div class="card mb-3">
+            <div class="card-header">Basic Configuration</div>
+            <div class="card-body" formGroupName="basic">
+                <fieldset class="form-group">
+                    <label>Host name</label><br />
+                    <input formControlName="hostName" type="text" value="" size="20">
+                    <p class="help-block">The host name which can be used by plugins to refer to this server e.g. in URLs sent in REST endpoints.</p>
+                </fieldset>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input formControlName="useProxy" type="checkbox" value="">
+                            Use HTTP proxy for outgoing connections
+                        </label>
+                    </div>
+                </div>
+                <div style="margin-left: 2em">
+                    <fieldset class="form-group">
+                        <label>Proxy host name</label><br />
+                        <input formControlName="proxyHost" type="text" value="" size="40">
+                        <p class="help-block">The host name or IP of the proxy server to use.</p>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Proxy port</label><br />
+                        <input formControlName="proxyPort" type="number" value="" size="5">
+                        <p class="help-block">The TCP port of the HTTP proxy server, e.g. 80 or 8080.</p>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Bypass proxy for (regular expression)</label><br />
+                        <input formControlName="bypassProxyRegex" type="text" value="" size="40">
+                        <p class="help-block">A regular expression which is matched on a host name or IP address for which the proxy shall not be used.</p>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top: 20px">
+    <div class="col-sm-12">
+        <div class="card mb-3">
+            <div class="card-header">Selenium Configuration</div>
+            <div class="card-body" formGroupName="selenium">
+                <fieldset class="form-group">
+                    <label>ACM Selenium WebDriver port</label><br />
+                    <input formControlName="port" type="number" value="" size="5">
+                    <p class="help-block">A server is started on this port providing WebDriver conform endpoints. Clients shall use this port to request Selenium resources.</p>
+                    <p>Selenium URL for clients: <b>{{clientSeleniumURL}}</b></p>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label>Health Check Interval (seconds)</label><br />
+                    <input formControlName="healthCheckInterval" type="number" value="" size="5">
+                    <p class="help-block">Specified the interval to use for checking each Selenium resource for its state.</p>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label>Connect Timeout (seconds)</label><br />
+                    <input formControlName="seleniumTimeout" type="number" value="" size="5">
+                    <p class="help-block">If, during health check, a Selenium resource does not establish a connection within this amount of time, it is treated as DISCONNECTED.</p>
+                </fieldset>
+                <fieldset class="form-group">
+                    <label>Max time between Selenium requests (seconds)</label><br />
+                    <input formControlName="maxIdleTime" type="number" value="" size="5">
+                    <p class="help-block">If a client does not issue a Selenium request for this amount of time, the associated managed request is treated as ORPHANED, the current Selenium session is deleted, and the resource is reused.</p>
+                </fieldset>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-save"> </i> Save Configuration</button>
+        <p style="margin-top: 10px"></p>
+        <p *ngFor="let alert of alerts">
+            <ngb-alert [type]="alert.type" [dismissible]="true" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+        </p>
+    </div>
+</div>
+</form>

@@ -1,0 +1,96 @@
+<h1>User Administration</h1>
+<br />
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group" *ngIf="allUsers" style="height: 300px; overflow-y: scroll">
+            <a *ngFor="let user of allUsers" [class]="'list-group-item ' + (user === selectedUser ? 'active' : '')" href="#" (click)="selectUser(user)">
+                <i class="fa fa-user"></i>&nbsp;&nbsp;{{ user.name }}
+            </a>
+        </div>
+        <br />
+        <!-- TODO show div only when users can be created -->
+        <div>
+            <fieldset class="form-group">
+                <label htmlFor="newUserName">Add user</label>
+                <input #newUserName id="newUserName" type="text" size="20" class="form-control" maxlength="40">
+            </fieldset>
+            <button type="button" class="btn btn-success" (click)="createUser(newUserName.value); newUserName.value=''"><i class="fa fa-plus"></i> Create</button>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div *ngIf="selectedUser" class="card">
+            <div class="card-header"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ selectedUser.name }}</div>
+            <div class="card-body">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="selectedUser.isAdmin"> Administrator (Full UI Access)
+                    </label>
+                </div>
+                <hr>
+                <h4>Resource Type Authorizations</h4>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Resource Type</th>
+                            <th>Max. Resource Usage</th>
+                            <th>Nice Level<br><small>(-19=best, +20=worst)</small></th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let resAuth of selectedUserAuthorizations">
+                            <td style="vertical-align: middle">{{ capitalizeFirstLetter(resAuth.type) }}</td>
+                            <td>
+                                <input #maxResources type="text" class="form-control" [(ngModel)]="resAuth.maxResources" size="5" maxlength="4">
+                            </td>
+                            <td>
+                                <input #niceLevel type="text" class="form-control" [(ngModel)]="resAuth.niceLevel" size="5" maxlength="3">
+                            <td>
+                                <button type="button" class="btn btn-danger" (click)="removeResourceAuthorization(resAuth)"><i class="fa fa-trash"></i> Remove</button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="selectedUserAuthorizations.length === 0">
+                            <td colspan="4"><i>No Resource Type Authorizations found for this user.</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <p-dropdown #addAuthorization [options]="availableAuthorizationTypes" (click)="debugDropdown(addAuthorization)" [filter]="false" [style]="{'width':'250px'}"></p-dropdown>&nbsp;
+                <button type="button" class="btn btn-success" (click)="addResourceAuthorization(addAuthorization.selectedOption.value)" [disabled]="!addAuthorization.selectedOption"><i class="fa fa-plus"></i> Add Authorization</button>
+                <br /><br />
+                <button type="button" (click)="saveUser()" class="btn btn-primary"><i class="fa fa-save"></i> Update User</button>
+                <button type="button" (click)="deleteUser()" class="btn btn-danger ml-2"><i class="fa fa-close"></i> Delete User</button>
+                <button type="button" (click)="changeUserPassword(passwordDialog)" class="btn btn-secondary ml-2"><i class="fa fa-key"></i> Change User Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div style="margin-top: 15px" *ngIf="alerts.length &gt; 0">
+            <p *ngFor="let alert of alerts">
+                <ngb-alert [type]="alert.type" [dismissible]="true" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<ng-template #passwordDialog let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Change Password</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('cancel')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <fieldset class="form-group">
+            <label htmlFor="newPassword">Enter the new password for this user:</label>
+            <input #newPassword type="password" id="newPassword" class="form-control" (input)="okButton">
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button #okButton type="button" class="btn btn-success ml-2" (click)="c({password: newPassword.value})" [disabled]="!newPassword.value || newPassword.value.length &lt; 4">Change Password</button>
+        <button type="button" class="btn btn-secondary ml-2" (click)="d('cancel')">Cancel</button>
+    </div>
+</ng-template>

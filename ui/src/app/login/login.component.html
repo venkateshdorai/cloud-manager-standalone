@@ -1,0 +1,21 @@
+<div class="login-page" [@routerTransition]>
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <img src="assets/images/logo.png" width="150px" class="user-avatar" />
+            <h1>AludraTest Cloud Manager</h1>
+            <form role="form">
+                <div class="form-content">
+                    <div class="form-group">
+                        <input #username type="text" ng-model="name" class="form-control input-underline input-lg" placeholder="Username">
+                    </div>
+
+                    <div class="form-group">
+                        <input #password type="password" class="form-control input-underline input-lg" placeholder="Password">
+                    </div>
+                </div>
+                <a class="btn rounded-btn" [routerLink]="['/dashboard']" (click)="performLogin(username.value,password.value)"> Log in </a>
+            </form>
+            <div style="margin-top: 10px" *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
+        </div>
+    </div>
+</div>

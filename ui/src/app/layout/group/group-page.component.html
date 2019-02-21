@@ -1,0 +1,40 @@
+<div>
+    <span class="h1">{{group?.name}} </span><span class="badge badge-info" style="vertical-align: top; position: relative; top: 6px">{{group?.type}}</span>
+    <a [routerLink]="'/group/config/' + group?.id" class="text-dark" style="margin-left: 1em"><i class="fa fa-wrench fa-2x"></i></a>
+</div>
+<div style="margin-top:20px"></div>
+
+<div *ngFor="let row of resourceRows" class="row row-padding">
+    <div *ngFor="let res of row" class="col-lg-3 col-no-padding">
+        <div [class]="'resource resource-' + res.state">
+            <div style="display: table; height: 100%; width: 100%; position: relative;">
+                <div style="display: table-cell; vertical-align: middle">
+                    <div class="resource-text">
+                        {{res.label}}<br />
+                        {{res.state}}<br *ngIf="res.jobName" />
+                        {{res.jobName}}
+                    </div>
+                    <!-- for selenium, special buttons -->
+                    <div *ngIf="isSelenium" style="position: absolute; top: 0px; right: 0px; height: 60px;">
+                        <button class="btn btn-sm btn-outline-secondary" style="padding: 0; width: 24px; height: 24px" (click)="toggleMaintenance(res)">
+                            <i [class]="'fa ' + (res.state === 'CONNECTED' ? 'fa-lock' : 'fa-unlock')"></i>
+                        </button><br /><button class="btn btn-sm btn-outline-secondary" style="padding: 0; width: 24px; height: 24px; margin-top: 8px" (click)="takeScreenshot(res, screenshotDialog)">
+                            <i class="fa fa-camera"></i>
+                        </button>
+
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<ng-template #screenshotDialog let-c="close">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <img [src]="currentScreenshotSrc" (click)="c()" style="max-width: 495px">
+        </div>
+    </div>
+</ng-template>

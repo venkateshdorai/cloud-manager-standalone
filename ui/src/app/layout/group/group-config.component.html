@@ -1,0 +1,82 @@
+<h1>{{ group ? group.name : '' }} <small class="text-secondary">Configuration</small></h1>
+<a *ngIf="group" [routerLink]="['/group/' + group.id]">&lt; Back to group</a>
+<form novalidate [formGroup]="groupConfigForm" (ngSubmit)="saveConfig($event)">
+<div *ngIf="hasUsers" class="row" style="margin-top: 20px">
+    <div class="col-sm-12">
+        <div class="card mb-3">
+            <div class="card-header">Access Configuration</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input formControlName="limitUsers" type="checkbox" value=""> Limit resource access to this group to users selected below
+                        </label>
+                    </div>                    
+                </div>
+                <div class="form-group" *ngIf="groupConfigForm.get('limitUsers').value">
+                    <span>Access is granted to following users:<br /></span>
+                    <span *ngFor="let user of allowedUsers">
+                    <span class="badge badge-info">{{ user.name }}&nbsp;<i class="fa fa-close" style="cursor: pointer" (click)="removeUser(user)"></i></span>
+                    <span>  </span> 
+                    </span>
+                    <span *ngIf="!allowedUsers.length"><small>&lt;no users selected&gt;</small></span>
+                </div>
+                <div class="form-group" *ngIf="groupConfigForm.get('limitUsers').value">
+                        <p-dropdown #selectedUser [options]="availableUsers" optionLabel="name" [filter]="true" [style]="{'width':'300px'}"></p-dropdown>&nbsp;
+                        <button type="button" class="btn btn-primary" (click)="addUser(selectedUser.selectedOption.value)">Add</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="isSelenium" class="row" style="margin-top: 20px">
+    <div class="col-sm-12">
+        <div class="card mb-3">
+            <div class="card-header">Selenium Resources</div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Selenium URL</th>
+                            <th>Max. no of sessions</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody [dragula]="'resourceTable'" [dragulaModel]='seleniumResources'>
+                        <tr *ngFor="let res of seleniumResources">
+                            <td>{{ res.url }}</td>
+                            <td>
+                                <input type="text" size="5" style="text-align: center" [value]="res.maxSessions" (change)="updateSeleniumResourceMaxSessions(res, $event)" />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" (click)="removeSeleniumResource(res)"><i class="fa fa-trash"></i> Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <small><i>Drag &amp; drop rows to change order of resources.</i></small><br /><br />
+                <div class="form-group row">
+                    <label class="col-sm-12 control-label" for="seleniumUrl">Add Selenium URL</label>
+                    <div class="col-sm-4">
+                        <input #seleniumUrl type="text" class="form-control" id="seleniumUrl" placeholder="http://192.168.123.111:4444">
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-primary" (click)="addSeleniumUrl(seleniumUrl.value); seleniumUrl.value=''">Add</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div class="row">
+    <div class="col-sm-12">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-save"> </i> Save Configuration</button>
+        <p style="margin-top: 10px"></p>
+        <p *ngFor="let alert of alerts">
+            <ngb-alert [type]="alert.type" [dismissible]="true" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+        </p>
+    </div>
+</div>
+</form>

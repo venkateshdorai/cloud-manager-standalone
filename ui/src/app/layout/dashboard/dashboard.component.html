@@ -1,0 +1,27 @@
+<div>
+    <h2>Dashboard</h2>
+    <br />
+    <p><i>This dashboard refreshes automatically.</i></p>
+    <br />
+    <div class="row">
+        <div class="col-xl-3 col-lg-6" style="text-align: center">
+            <h6><strong>Resources Usage</strong></h6>
+            <app-mwl-gauge *ngIf="stats.availableResources &gt; 0" [min]="0" [max]="stats.availableResources" [value]="stats.resourcesUsed" [label]="resourcesUsageLabel"
+                [color]="resourcesUsageColor" [animated]="true">
+            </app-mwl-gauge>
+
+        </div>
+        <div class="col-xl-3 col-lg-6" style="text-align: center">
+            <h6><strong>Currently managed Requests</strong></h6>
+            <p class="stat-text">{{stats.totalRequests}}</p>
+        </div>
+        <div class="col-xl-3 col-lg-6" style="text-align: center">
+            <h6><strong>Currently waiting Requests</strong></h6>
+            <p class="stat-text" [ngStyle]="{ 'color': waitCountColor(stats.waitingRequests) }">{{stats.waitingRequests}}</p>
+        </div>
+        <div class="col-xl-3 col-lg-6" style="text-align: center">
+            <h6><strong>Avg Request Wait Time</strong> (seconds)</h6>
+            <p class="stat-text" [ngStyle]="{ 'color': waitTimeColor(stats.averageWaitTimeMs / 1000) }">{{stats.averageWaitTimeMs / 1000}}</p>
+        </div>
+    </div>
+</div>

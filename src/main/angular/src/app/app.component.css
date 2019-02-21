@@ -1,0 +1,10 @@
+@import "~@material/drawer/dist/mdc.drawer.css";
+
+.app-sidenav a.mat-line {
+    font-weight: bold;
+    font-size: small;
+}
+
+.app-sidenav .mat-nav-list {
+    padding-top: 0;
+}
