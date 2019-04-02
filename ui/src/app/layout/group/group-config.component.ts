@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourceGroup, ResourceGroupService, Resource, SeleniumResource } from '../../shared/services/resourcegroup.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { User, UserService } from '../../shared/services/user.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -44,7 +44,7 @@ export class GroupConfigComponent implements OnInit {
     });
 
     constructor(public fb: FormBuilder, public groupService: ResourceGroupService, public userService: UserService,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute, private router:Router) {
     }
 
     ngOnInit() {
@@ -126,6 +126,16 @@ export class GroupConfigComponent implements OnInit {
             this.groupService.updateSeleniumConfigResources(this.groupId, this.seleniumResources).subscribe(ur => { },
                 error => this.showSaveError('Error saving Selenium Resources'));
         }
+    }
+    
+    removeGroup(){
+    	try{
+    		this.groupService.deleteGroup(this.groupId).subscribe(resp => {this.router.navigate(['/dashboard']);},
+    															 error => {   console.log(error)    }    );
+    	}
+    	catch(e){
+    		console.log(e);
+    	}
     }
 
     closeAlert(alert) {

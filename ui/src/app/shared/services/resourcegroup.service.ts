@@ -74,6 +74,10 @@ export class ResourceGroupService {
         return this.http.get('/api/groups/' + id + '/config/users', { headers: this.userService.createJwtHeader() })
             .map((data: any) => ({ limitUsers: this.extractConfigValue(data.result.config, 'limitUsers') }));
     }
+    
+    public deleteGroup(id: number){
+    	return this.http.delete('/api/groups/' + id, { headers: this.userService.createJwtHeader() });
+    }
 
     public updateUsersConfig(id: number, limitUsers: boolean, allowedUsers: Array<User>): Observable<ResourceGroupUsersConfig> {
         const headers = this.userService.createJwtHeader().set('Content-Type', 'application/x-www-form-urlencoded');
